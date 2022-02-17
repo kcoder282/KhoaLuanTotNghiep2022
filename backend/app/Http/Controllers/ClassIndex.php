@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ClassIndex as ModelsClassIndex;
 use Illuminate\Http\Request;
 
 class ClassIndex extends Controller
@@ -13,7 +14,7 @@ class ClassIndex extends Controller
      */
     public function index()
     {
-        //
+        return ModelsClassIndex::get();
     }
 
     /**

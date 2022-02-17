@@ -13,9 +13,9 @@ class CreateClassIndex extends Migration
      */
     public function up()
     {
-        Schema::create('class_index', function (Blueprint $table) {
+        Schema::create('class_indices', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name', 50);
             $table->year('beginYear');
             $table->year('endYear');
             $table->string('description')->nullable();
