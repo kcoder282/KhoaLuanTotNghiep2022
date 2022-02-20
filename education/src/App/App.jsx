@@ -1,6 +1,7 @@
 import React from "react";
-import ClassIndexManager from "./ClassIndexManager";
+import ClassIndexManager from "./ClassIndex/ClassIndexManager";
 import Layout from "./Layout/Layout";
+// import ProgramEducationManager from "./ProgramEducation/ProgramEducationManager";
 
 export default function App(data) {
     return (

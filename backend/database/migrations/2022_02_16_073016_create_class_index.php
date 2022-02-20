@@ -15,10 +15,11 @@ class CreateClassIndex extends Migration
     {
         Schema::create('class_indices', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 50);
+            $table->string('name', 8);
             $table->year('beginYear');
             $table->year('endYear');
-            $table->string('description')->nullable();
+            $table->string('description', 200)->nullable();
+            $table->boolean('status')->default(false);
             $table->timestamps();
         });
     }
