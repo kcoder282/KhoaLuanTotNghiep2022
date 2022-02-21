@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ClassIndex;
+use App\Http\Controllers\Semester;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,3 +16,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::apiResource('/class_index',ClassIndex::class);
+Route::apiResource('/semester', Semester::class);

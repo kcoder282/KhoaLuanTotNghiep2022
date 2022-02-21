@@ -76,9 +76,9 @@ export default function ClassIndexManager() {
                             <span>{data.beginYear} - {data.endYear}</span>
                         </Tooltip>
                     } />
-                    <Column width={4} title='Description' render={(data) => (
-                        <Tooltip title={data.description ?? <>Chương trình đào tạo cho <b>{data.name}</b></>}>
-                            <div className='text' style={{ minWidth: '200px' }}>{data.description ?? '...'}</div>
+                    <Column width={4} title='Description' ellipsis render={(data) => (
+                        <Tooltip placement="topLeft" title={data.description ?? <>Chương trình đào tạo cho <b>{data.name}</b></>}>
+                            <div style={{ minWidth: '200px' }}>{data.description ?? '...'}</div>
                         </Tooltip>
                     )} />
                     <Column align='center' width={3} ellipsis title='Date' render={(data) => {
