@@ -9,7 +9,9 @@ export default function Layout({ children }) {
                     Education
                 </div>
             </header>    
-            {children}
+            <div className='p-3 shadow bg-light mx-0 m-sm-3 flex-fill'>
+              {children}
+            </div>
         </div>
     )
 }

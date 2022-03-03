@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateClassIndex extends Migration
+class CreateGroupCoursesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,11 @@ class CreateClassIndex extends Migration
      */
     public function up()
     {
-        Schema::create('class_indices', function (Blueprint $table) {
+        Schema::create('group_courses', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 8);
-            $table->year('beginYear');
-            $table->year('endYear');
-            $table->string('description', 200)->nullable();
-            $table->boolean('status')->default(false);
+            $table->string('name');
+            $table->tinyInteger('sumCredit');
+            $table->string('des',200);
             $table->timestamps();
         });
     }
@@ -31,6 +29,6 @@ class CreateClassIndex extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('class_index');
+        Schema::dropIfExists('group_courses');
     }
 }

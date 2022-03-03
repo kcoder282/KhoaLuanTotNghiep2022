@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSemestersTable extends Migration
+class CreateClassIndicesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,13 @@ class CreateSemestersTable extends Migration
      */
     public function up()
     {
-        Schema::create('semesters', function (Blueprint $table) {
+        Schema::create('class_indices', function (Blueprint $table) {
             $table->id();
-            $table->tinyInteger('schoolYear');
-            $table->tinyInteger('semester');
-            $table->unique(['schoolYear', 'semester']);
+            $table->string('name',8);
+            $table->year('beginYear');
+            $table->year('endYear');
+            $table->foreignId('srcClassIndex')->nullable()->constrained('class_indices');
+            $table->string('des',200);
             $table->timestamps();
         });
     }
@@ -29,6 +31,6 @@ class CreateSemestersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('semesters');
+        Schema::dropIfExists('class_indices');
     }
 }

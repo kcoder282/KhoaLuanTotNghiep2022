@@ -1,19 +1,15 @@
 <?php
 
-use App\Http\Controllers\ClassIndex;
-use App\Http\Controllers\Semester;
-use Illuminate\Http\Request;
+use App\Http\Controllers\ClassIndexController;
+use App\Http\Controllers\CoursesController;
+use App\Http\Controllers\CoursesTypeController;
+use App\Http\Controllers\GroupCourseController;
+use App\Http\Controllers\SemesterController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
-Route::apiResource('/class_index',ClassIndex::class);
-Route::apiResource('/semester', Semester::class);
+Route::apiResource('class_index', ClassIndexController::class);
+Route::apiResource('group_course', GroupCourseController::class);
+Route::apiResource('semester', SemesterController::class);
+Route::apiResource('courses_type', CoursesTypeController::class);
+Route::apiResource('course', CoursesController::class);
+?>
