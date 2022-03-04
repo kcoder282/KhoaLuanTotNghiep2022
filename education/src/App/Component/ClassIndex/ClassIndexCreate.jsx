@@ -1,20 +1,42 @@
-import { Button, DatePicker, Input, Modal, Select } from 'antd'
+import { PlusCircleOutlined } from '@ant-design/icons';
+import { Button, DatePicker, Input, message, Modal, Select } from 'antd'
 import { Form } from 'antd'
 import TextArea from 'antd/lib/input/TextArea';
-import React from 'react'
+import axios from 'axios';
+import moment from 'moment';
+import React, { useState, useEffect } from 'react'
+import { host } from '../../App';
 
 export default function ClassIndexCreate({ show, setShow, data, list=[] }) {
     const [form] = Form.useForm();
+    const [load, setLoad] = useState(false);
     const action = (value) =>{
-        console.log(value);
-        console.log(form);
+        setLoad(true);
+        axios.post(host('class_index'),value)
+        .then((result) => {
+            const type = result.data.type;
+            message[type](result.data.message);
+            setShow(false);
+        }).catch((err) => {
+            message.error('Server Error')
+        }).finally(()=>setLoad(false));
     }
+    useEffect(() => {
+      if(show && data.id!==0){
+        data.year = [moment(data.beginYear, "YYYY"), moment(data.endYear, "YYYY")]
+        form.setFieldsValue(data);
+      }
+    }, [data, form, show])
+    
     return (
-        <Modal title={data === undefined ? 'Tạo CTĐT mới' : ('Chỉnh sửa CTĐT: ' + data.name)} onCancel={() => setShow(false)} footer={false} visible={show}>
+        <Modal title={data.id === 0 ? 'Tạo CTĐT mới' : ('Chỉnh sửa CTĐT: ' + data.name)} onCancel={() => setShow(false)} footer={false} visible={show}>
             <Form form={form} 
                 onFinish={action}
                 labelCol={{ span: 5 }}
                 wrapperCol={{ span: 19 }}>
+                <Form.Item hidden name='id'>
+                    <Input/>
+                </Form.Item> 
                 <Form.Item
                     required={true}
                     label='Tên CTĐT'
@@ -29,7 +51,11 @@ export default function ClassIndexCreate({ show, setShow, data, list=[] }) {
                 <Form.Item
                     required={true}
                     label='Niên khóa'
-                    name='year'>
+                    name='year'
+                    rules={[{
+                        required:true,
+                        message:'Hãy chọn niên khóa cho CTĐT'
+                    }]}>
                     <DatePicker.RangePicker picker='year' style={{width:'100%'}}/>
                 </Form.Item>
                 <Form.Item
@@ -49,7 +75,9 @@ export default function ClassIndexCreate({ show, setShow, data, list=[] }) {
                     <TextArea placeholder="Mô tả CTĐT" autoSize showCount maxLength={200}/>
                 </Form.Item>
                 <div className='d-flex justify-content-end'>
-                    <Button htmlType="submit" type='primary' shape='round' >Khởi tạo</Button>
+                    <Button loading={load} htmlType="submit" type='primary' shape='round' icon={<PlusCircleOutlined />} >{
+                        data.id === 0? "Khởi tạo": "Lưu thay đổi"
+                    }</Button>
                 </div>
             </Form>
         </Modal>

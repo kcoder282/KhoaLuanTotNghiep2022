@@ -1,5 +1,7 @@
 import React from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ClassIndex from "./Component/ClassIndex/ClassIndex";
+import Program from "./Component/Program/Program";
 import Layout from "./Layout/Layout";
 
 const api = 'http://127.0.0.1:8000/api/';
@@ -15,7 +17,12 @@ export const format = (data) => data.map((e, i) => ({ 'index': i + 1, 'key': e.i
 export default function App(data) {
     return (
         <Layout>
-            <ClassIndex/>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<ClassIndex />} />
+                    <Route path="/program/:name/:id" element={<Program/>}/> 
+                </Routes>
+            </BrowserRouter>
         </Layout>
     );
 }

@@ -14,7 +14,7 @@ class SemesterController extends Controller
      */
     public function index()
     {
-        //
+        return Semester::all();
     }
 
     /**

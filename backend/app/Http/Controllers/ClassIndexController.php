@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ClassIndex;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class ClassIndexController extends Controller
 {
@@ -12,9 +13,9 @@ class ClassIndexController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return ClassIndex::all();
+        return ClassIndex::where('del', $request->del)->get();
     }
 
     /**
@@ -25,7 +26,19 @@ class ClassIndexController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if (isset($request->id))
+            $classIndex = ClassIndex::find($request->id);
+        else
+            $classIndex = new ClassIndex();
+
+        $classIndex->name = $request->name;
+        $classIndex->beginYear = Carbon::parse($request->year[0])->year;
+        $classIndex->endYear = Carbon::parse($request->year[1])->year;
+        $classIndex->des = $request->des;
+        $classIndex->srcClassIndex = $request->srcClassIndex;
+
+        return $classIndex->save() ? ['type' => 'success', 'message' => isset($request->id) ? 'Tạo mới CTĐT thành cong' : 'Cập nhật CTĐT thành công'] :
+            ['type' => 'error', 'message' => 'Xảy ra lỗi khi thêm CTĐT mới'];
     }
 
     /**
@@ -48,7 +61,9 @@ class ClassIndexController extends Controller
      */
     public function update(Request $request, ClassIndex $classIndex)
     {
-        //
+        $classIndex->del = $request->del;
+        return $classIndex->save()? ['type'=>'success', 'message'=>'Chuyển file vào thùng rác thành công']:
+        ['type'=>'error', 'message'=>'Chuyển file vào thùng rác thất bại'];
     }
 
     /**
@@ -59,6 +74,12 @@ class ClassIndexController extends Controller
      */
     public function destroy(ClassIndex $classIndex)
     {
-        //
+        return $classIndex->delete()?[
+            'type' => 'success',
+            'message' => 'Xóa CTĐT thành công' 
+        ]:[
+            'type' => 'error',
+            'message' => 'Xóa CTĐT thất bại!'
+        ];
     }
 }
