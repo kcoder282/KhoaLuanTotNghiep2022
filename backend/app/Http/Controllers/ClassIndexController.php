@@ -37,7 +37,8 @@ class ClassIndexController extends Controller
         $classIndex->des = $request->des;
         $classIndex->srcClassIndex = $request->srcClassIndex;
 
-        return $classIndex->save() ? ['type' => 'success', 'message' => isset($request->id) ? 'Tạo mới CTĐT thành cong' : 'Cập nhật CTĐT thành công'] :
+        return $classIndex->save() ? 
+            ['type' => 'success', 'message' => isset($request->id) ? 'Cập nhật CTĐT thành công' : 'Tạo mới CTĐT thành công'] :
             ['type' => 'error', 'message' => 'Xảy ra lỗi khi thêm CTĐT mới'];
     }
 
@@ -66,7 +67,11 @@ class ClassIndexController extends Controller
             return $classIndex->save() ? ['type' => 'success', 'message' => 'Chuyển file vào thùng rác thành công'] :
             ['type' => 'error', 'message' => 'Chuyển file vào thùng rác thất bại'];
         }else{
-            
+            $classIndex->sem = $request->sem;
+            $classIndex->semThree = $request->semThree;
+            return $classIndex->save()?
+            ['type' => 'success', 'message' => 'Cập nhật thông tin thành công']:
+            ['type' => 'error', 'message' => 'Cập nhật thông tin thất bại'];
         }
     }
 

@@ -1,16 +1,26 @@
-import { CopyOutlined, SaveOutlined } from '@ant-design/icons';
-import { Form, Modal, Switch, InputNumber, Button } from 'antd'
+import { SaveOutlined } from '@ant-design/icons';
+import { Form, Modal, Switch, InputNumber, Button, message } from 'antd'
+import axios from 'axios';
 import React, { useEffect } from 'react'
+import { host } from '../../App';
 
-export default function ProgramSetting({ show, setShow, data }) {
+export default function ProgramSetting({ show, setShow, data, tab }) {
     const [form] = Form.useForm();
+
     useEffect(() => {
         data.semThree = data.semThree===1?true:false
         form.setFieldsValue(data);
-        console.log(data);
     }, [data, form])
+
     const action = (dataForm)=>{
-        console.log(dataForm);
+        return axios.put(host('class_index/'+data.id), dataForm)
+        .then((result) => {
+            const type = result.data.type;
+            message[type](result.data.message);
+            setShow(false);
+        }).catch((err) => {
+            message.error('Server Error');
+        })
     }
     return (
         <Modal title={"Cài đặt khóa học "+data.name} footer={false} visible={show} onCancel={()=>setShow(false)}>
