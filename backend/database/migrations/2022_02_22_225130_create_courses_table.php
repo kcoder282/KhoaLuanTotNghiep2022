@@ -26,7 +26,6 @@ class CreateCoursesTable extends Migration
             $table->foreignId('groupCourseId')->nullable()->constrained('group_courses');
             $table->foreignId('ClassIndexId')->nullable()->constrained('class_indices');
             $table->foreignId('coursesType')->nullable()->constrained('courses_types');
-            $table->foreignId('SemesterId')->nullable()->constrained('semesters');
             $table->timestamps();
         });
     }

@@ -49,7 +49,7 @@ class ClassIndexController extends Controller
      */
     public function show(ClassIndex $classIndex)
     {
-        //
+        return $classIndex;
     }
 
     /**
@@ -61,9 +61,13 @@ class ClassIndexController extends Controller
      */
     public function update(Request $request, ClassIndex $classIndex)
     {
-        $classIndex->del = $request->del;
-        return $classIndex->save()? ['type'=>'success', 'message'=>'Chuyển file vào thùng rác thành công']:
-        ['type'=>'error', 'message'=>'Chuyển file vào thùng rác thất bại'];
+        if(isset($request->del)){
+            $classIndex->del = $request->del;
+            return $classIndex->save() ? ['type' => 'success', 'message' => 'Chuyển file vào thùng rác thành công'] :
+            ['type' => 'error', 'message' => 'Chuyển file vào thùng rác thất bại'];
+        }else{
+            
+        }
     }
 
     /**
