@@ -3,7 +3,7 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { host } from '../../App'
 import { useParams } from "react-router-dom";
-import { ReadOutlined, SettingOutlined } from '@ant-design/icons';
+import { PlusOutlined, ReadOutlined, SettingOutlined } from '@ant-design/icons';
 import ProgramSetting from './ProgramSetting';
 import Column from 'antd/lib/table/Column';
 
@@ -59,7 +59,8 @@ export default function Program() {
                 </div>
                 <div className='col-12 col-sm-4 bg-light shadow rounded pt-3'>
                     <h5 className='text-center'>Các Môn học</h5>
-                    <Table scroll={{y:240}}>
+                    <div className='text-right'><Button type='primary' shape='round' icon={<PlusOutlined/>}>Thêm môn học</Button></div>
+                    <Table scroll={{y:200}}>
                         <Column title='#' dataIndex='index'/>
                         <Column title='Mã' dataIndex='code'/>
                         <Column title='Tên' dataIndex='name'/>
