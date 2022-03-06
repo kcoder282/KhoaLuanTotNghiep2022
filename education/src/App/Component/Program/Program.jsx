@@ -60,7 +60,7 @@ export default function Program() {
                 <div className='col-12 col-sm-4 bg-light shadow rounded pt-3'>
                     <h5 className='text-center'>Các Môn học</h5>
                     <div className='text-right'><Button type='primary' shape='round' icon={<PlusOutlined/>}>Thêm môn học</Button></div>
-                    <Table scroll={{y:200}}>
+                    <Table scroll={{ y: 200 }} pagination={{ position: ['none', 'none'] }}>
                         <Column title='#' dataIndex='index'/>
                         <Column title='Mã' dataIndex='code'/>
                         <Column title='Tên' dataIndex='name'/>
