@@ -59,7 +59,7 @@ export default function Program() {
                 </div>
                 <div className='col-12 col-sm-4 bg-light shadow rounded pt-3'>
                     <h5 className='text-center'>Các Môn học</h5>
-                    <Table>
+                    <Table scroll={{y:240}}>
                         <Column title='#' dataIndex='index'/>
                         <Column title='Mã' dataIndex='code'/>
                         <Column title='Tên' dataIndex='name'/>
