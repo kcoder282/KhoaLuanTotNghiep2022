@@ -19,6 +19,8 @@ class CreateClassIndicesTable extends Migration
             $table->year('beginYear');
             $table->year('endYear');
             $table->foreignId('srcClassIndex')->nullable()->constrained('class_indices');
+            $table->boolean('semThree')->default(0);
+            $table->tinyInteger('sem')->default(4);
             $table->string('des',200)->nullable();
             $table->boolean('del')->default(0);
             $table->timestamps();
