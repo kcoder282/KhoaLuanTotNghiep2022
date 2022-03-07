@@ -24,7 +24,7 @@ export default function Program() {
                         data.push({
                             key: JSON.stringify({i: i, j: j - 1}),
                             tab: (j === 3 ? `HK hè năm ${i + 1}` : `Học Kỳ ${i * 2 + j}`),
-                            title: (j === 3 ? `HK hè năm ${i + 1}` : `Học Kỳ ${j}, năm ${i + 1}`)
+                            title: (j === 3 ? `Năm ${i + 1}, học kỳ hè` : `Năm ${i + 1}, học Kỳ ${j}`)
                         });
                     }
                 }
