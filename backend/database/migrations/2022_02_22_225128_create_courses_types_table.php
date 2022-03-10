@@ -16,8 +16,9 @@ class CreateCoursesTypesTable extends Migration
         Schema::create('courses_types', function (Blueprint $table) {
             $table->id();
             $table->string('name',100);
-            $table->string('color',6);
-            $table->string('des',200);
+            $table->string('color',7);
+            $table->string('des',200)->nullable();
+            $table->foreignId('ClassIndexId')->nullable()->constrained('class_indices');
             $table->timestamps();
         });
     }

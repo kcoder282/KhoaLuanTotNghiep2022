@@ -1,4 +1,4 @@
-import { Button, message, Table, Tabs, Tooltip } from 'antd'
+import { Button, message, Space, Table, Tabs, Tooltip } from 'antd'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { host } from '../../App'
@@ -7,6 +7,7 @@ import { PlusOutlined, ReadOutlined, SettingOutlined } from '@ant-design/icons';
 import ProgramSetting from './ProgramSetting';
 import Column from 'antd/lib/table/Column';
 import CoursesCreate from './Courses/CoursesCreate';
+import CoursesTypeCreate from './CoursesType/CoursesTypeCreate';
 
 export default function Program() {
     const { id } = useParams();
@@ -14,6 +15,7 @@ export default function Program() {
     const [sem, setSem] = useState([]);
     const [showSetting, setShowSetting] = useState(false);
     const [showCourse, setShowCourse] = useState(false);
+    const [showCourseType, setShowCourseType] = useState(false);
     const [tab, setTab] = useState(1);
     useEffect(() => {
         axios.get(host('class_index/' + id))
@@ -67,7 +69,10 @@ export default function Program() {
                 </div>
                 <div className='col-12 col-sm-4 bg-light shadow rounded pt-2 pt-sm-4'>
                     <h5 className='text-center'>Các Môn học</h5>
-                    <div className='text-right'><Button type='primary' shape='round' icon={<PlusOutlined/>} onClick={()=>setShowCourse(true)}>Thêm môn học</Button></div>
+                    <Space>
+                        <Button type='primary' shape='round' icon={<PlusOutlined />} onClick={() => setShowCourseType(true)}>Thêm khối k.thức</Button>
+                        <Button type='primary' shape='round' icon={<PlusOutlined/>} onClick={()=>setShowCourse(true)}>Thêm môn học</Button>
+                    </Space>
                     <Table  scroll={{ y: 200 }} pagination={{ position: ['none', 'none'] }}>
                         <Column width={1} title='#' dataIndex='index' align='center'/>
                         <Column width={2} title='Mã' dataIndex='code' align='center'/>
@@ -79,7 +84,11 @@ export default function Program() {
                     </div>
                 </div>
             </div>
-            <CoursesCreate show={showCourse} setShow={setShowCourse} classIndex={dataClassIndex}/>
+            <CoursesCreate show={showCourse} setShow={setShowCourse}
+             classIndex={dataClassIndex}
+             showType={showCourseType}
+             setShowType={setShowCourseType}/>
+            <CoursesTypeCreate show={showCourseType} setShow={setShowCourseType} classIndex={dataClassIndex}/>
             <ProgramSetting show={showSetting} setShow={setShowSetting} data={dataClassIndex} tab={tab}/>
         </div>
     )

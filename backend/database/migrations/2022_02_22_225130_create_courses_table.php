@@ -20,6 +20,7 @@ class CreateCoursesTable extends Migration
             $table->tinyInteger('credits');
             $table->tinyInteger('theory');
             $table->tinyInteger('practice');
+            $table->tinyInteger('sem')->nullable();
             $table->foreignId('prerequisite')->nullable()->constrained('courses');
             $table->foreignId('learnFirst')->nullable()->constrained('courses');
             $table->foreignId('parallel')->nullable()->constrained('courses');
