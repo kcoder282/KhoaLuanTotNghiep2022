@@ -60,7 +60,7 @@ export default function CoursesTypeCreate({ show, setShow, classIndex }) {
             visible={show} onCancel={() => setShow(false)} footer={false}>
             <h5 className='text-center'>Danh sách khối kiến thức</h5>
             <div className='m-2 d-flex'>
-            <Switch onChange={setViewList} defaultChecked={viewList} className='mr-2'></Switch> Khối kiến thức <b>{classIndex.name}</b> ({dataList?.length??0})
+            <Switch onChange={setViewList} defaultChecked={viewList} className='mr-2'></Switch> Khối kiến thức <b className='mx-1'>{classIndex.name}</b> (tổng {dataList?.length??0})
             </div>
             {viewList?
                 <Table className='my-2' bordered size='small' loading={dataList === undefined} dataSource={dataList}>

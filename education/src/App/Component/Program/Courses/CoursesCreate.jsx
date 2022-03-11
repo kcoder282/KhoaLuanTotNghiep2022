@@ -9,7 +9,7 @@ export default function CoursesCreate({ show, setShow, classIndex, setShowType, 
   const [form] = Form.useForm();
   const [formAdd] = Form.useForm();
   const [coursesType, setCoursesType] = useState([]);
-
+  const [load, setLoad] = useState(false);
   useEffect(() => {
     form.setFieldsValue({'ClassIndexId': classIndex.id})
     if(showType===false){
@@ -32,12 +32,16 @@ export default function CoursesCreate({ show, setShow, classIndex, setShowType, 
     form.setFieldsValue({ theory: (parseInt(form.getFieldValue('credits') * 30 - e) / 2) })
   }
   const actionAdd =(data)=>{
+    setLoad(true);
     axios.post(host('course'),data)
     .then((result) => {
-      console.log(result.data);
+      const type = result.data.type;
+      message[type](result.data.message);
+      form.resetFields();
+      form.setFieldsValue({ 'ClassIndexId': classIndex.id })
     }).catch((err) => {
-      
-    });
+      message.error('Server error')
+    }).finally(()=>setLoad(false));
   }
   
   return (
@@ -46,6 +50,9 @@ export default function CoursesCreate({ show, setShow, classIndex, setShowType, 
         form={form}
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}>
+        <Form.Item name='id' hidden>
+          <Input />
+        </Form.Item>
         <Form.Item name='ClassIndexId' hidden>
           <Input/>
         </Form.Item>
@@ -162,7 +169,7 @@ export default function CoursesCreate({ show, setShow, classIndex, setShowType, 
         </> : ''
         }
         <div className='text-right'>
-          <Button htmlType='submit' type='primary' shape='round' icon={<PlusCircleOutlined/>}>Tạo môn học mới</Button>
+          <Button htmlType='submit' loading={load} type='primary' shape='round' icon={<PlusCircleOutlined/>}>Tạo môn học mới</Button>
         </div>
       </Form>
     </Modal>

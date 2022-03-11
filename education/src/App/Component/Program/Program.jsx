@@ -1,7 +1,7 @@
-import { Button, message, Space, Table, Tabs, Tooltip } from 'antd'
+import { Button, message, Space, Spin, Table, Tabs, Tooltip } from 'antd'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { host } from '../../App'
+import { format, host } from '../../App'
 import { useParams } from "react-router-dom";
 import { PlusOutlined, ReadOutlined, SettingOutlined } from '@ant-design/icons';
 import ProgramSetting from './ProgramSetting';
@@ -12,11 +12,12 @@ import CoursesTypeCreate from './CoursesType/CoursesTypeCreate';
 export default function Program() {
     const { id } = useParams();
     const [dataClassIndex, setDataClassIndex] = useState({})
-    const [sem, setSem] = useState([]);
+    const [sem, setSem] = useState();
     const [showSetting, setShowSetting] = useState(false);
     const [showCourse, setShowCourse] = useState(false);
     const [showCourseType, setShowCourseType] = useState(false);
     const [tab, setTab] = useState(1);
+    const [coursesList, setCoursesList] = useState();
     useEffect(() => {
         axios.get(host('class_index/' + id))
             .then((result) => {
@@ -35,6 +36,10 @@ export default function Program() {
             }).catch((err) => {
                 message.error("Server error");
             });
+        axios.get(host('course', { ClassIndexId: id }))
+        .then((result) => {
+            setCoursesList(format(result.data))
+        })
     }, [id, showSetting])
 
     return (
@@ -45,7 +50,9 @@ export default function Program() {
             </div>
             <div className='row flex-fill bg-light shadow rounded'>
                 <div className='col-12 col-sm-8'>
-                    <Tabs className='mt-2 mt-sm-4' tabPosition='left' defaultActiveKey='1' onChange={(e)=>setTab(JSON.parse(e))}>
+                    {sem===undefined?<div className='text-center p-5'>
+                        <Spin size='large'/>
+                    </div> : <Tabs className='mt-2 mt-sm-4' tabPosition='left' defaultActiveKey='1' onChange={(e) => setTab(JSON.parse(e))}>
                         {sem.map((e) =>
                             <Tabs.TabPane {...e}>
                                 <h5 className='text-primary text-uppercase'><ReadOutlined className='mr-2' />{e.title}</h5>
@@ -53,19 +60,19 @@ export default function Program() {
                                     <Button type='primary' shape='round' icon={<PlusOutlined />}>Thêm</Button>
                                 </div>
                                 <Table>
-                                    <Column title='#' align='center'/>
-                                    <Column title={<Tooltip title='Mã môn học'><span>Mã</span></Tooltip>} align='center'/>
-                                    <Column title={<Tooltip title='Tên môn học'><span>Tên môn học</span></Tooltip>} align='center'/>
-                                    <Column title={<Tooltip title='Số Tín Chỉ'><span>T.Chỉ</span></Tooltip>} align='center'/>
-                                    <Column title={<Tooltip title='Thay đổi thông tin'><span>T.Tin</span></Tooltip>}/>
-                                    <Column title={<Tooltip title='Loại bỏ môn học khỏi học kì'><span>Bỏ</span></Tooltip>}/>
+                                    <Column title='#' align='center' />
+                                    <Column title={<Tooltip title='Mã môn học'><span>Mã</span></Tooltip>} align='center' />
+                                    <Column title={<Tooltip title='Tên môn học'><span>Tên môn học</span></Tooltip>} align='center' />
+                                    <Column title={<Tooltip title='Số Tín Chỉ'><span>T.Chỉ</span></Tooltip>} align='center' />
+                                    <Column title={<Tooltip title='Thay đổi thông tin'><span>T.Tin</span></Tooltip>} />
+                                    <Column title={<Tooltip title='Loại bỏ môn học khỏi học kì'><span>Bỏ</span></Tooltip>} />
                                 </Table>
                                 <div className='text-right p-2'>
                                     Tổng số môn học: <b>0</b><br />
                                     Tổng số tín chỉ: <b>0</b>
                                 </div>
                             </Tabs.TabPane>)}
-                    </Tabs>
+                    </Tabs> }
                 </div>
                 <div className='col-12 col-sm-4 bg-light shadow rounded pt-2 pt-sm-4'>
                     <h5 className='text-center'>Các Môn học</h5>
@@ -73,7 +80,8 @@ export default function Program() {
                         <Button type='primary' shape='round' icon={<PlusOutlined />} onClick={() => setShowCourseType(true)}>Thêm khối k.thức</Button>
                         <Button type='primary' shape='round' icon={<PlusOutlined/>} onClick={()=>setShowCourse(true)}>Thêm môn học</Button>
                     </Space>
-                    <Table  scroll={{ y: 200 }} pagination={{ position: ['none', 'none'] }}>
+                    <Table  scroll={{ y: 200 }} pagination={{ position: ['none', 'none'] }} 
+                    dataSource={coursesList} loading={coursesList===undefined}>
                         <Column width={1} title='#' dataIndex='index' align='center'/>
                         <Column width={2} title='Mã' dataIndex='code' align='center'/>
                         <Column width={3} title='Tên môn' ellipsis dataIndex='name' align='center'/>
