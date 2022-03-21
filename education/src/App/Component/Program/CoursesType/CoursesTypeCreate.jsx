@@ -46,6 +46,7 @@ export default function CoursesTypeCreate({ show, setShow, classIndex }) {
             message.error('Server error')
         }).finally(LoadData);
     }
+    
     const DeleteData = ({id})=>{
         return axios.delete(host('courses_type/' + id))
         .then((result) => {

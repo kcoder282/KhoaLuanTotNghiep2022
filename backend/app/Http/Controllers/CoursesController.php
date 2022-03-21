@@ -14,7 +14,7 @@ class CoursesController extends Controller
      */
     public function index(Request $request)
     {
-        return Courses::where('ClassIndexId',$request->ClassIndexId)->where('sem', null)->get();
+        return Courses::where('ClassIndexId',$request->ClassIndexId)->where('delete', 0)->get();
     }
 
     /**
@@ -68,9 +68,13 @@ class CoursesController extends Controller
      * @param  \App\Models\Courses  $courses
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Courses $courses)
+    public function update(Request $request, $id)
     {
-        //
+        $courses = Courses::find($id);
+        $courses->sem = $request->sem;
+        return $courses->save()?
+        ['type' => 'success', 'message' => 'Thành công'] :
+        ['type' => 'error', 'message' => 'Thất bại'];
     }
 
     /**
@@ -79,8 +83,11 @@ class CoursesController extends Controller
      * @param  \App\Models\Courses  $courses
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Courses $courses)
+    public function destroy($id)
     {
-        //
+        $courses = Courses::find($id);
+        $courses->delete = !$courses->delete;
+        return $courses->save() ?
+        ['type' => 'success'] : ['type' => 'error'];
     }
 }

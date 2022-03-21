@@ -37,9 +37,11 @@ export default function CoursesCreate({ show, setShow, classIndex, setShowType, 
     .then((result) => {
       const type = result.data.type;
       message[type](result.data.message);
-      form.resetFields();
-      form.setFieldsValue({ 'ClassIndexId': classIndex.id })
-    }).catch((err) => {
+      if(type==='success'){
+        form.resetFields();
+        form.setFieldsValue({ 'ClassIndexId': classIndex.id })
+      }
+    }).catch(() => {
       message.error('Server error')
     }).finally(()=>setLoad(false));
   }
@@ -93,6 +95,19 @@ export default function CoursesCreate({ show, setShow, classIndex, setShowType, 
         </Form.Item>
         <Form.Item
           required
+          label='Số tiết' >
+          <div className='d-flex'>
+            <Form.Item name='theory' required className='w-100 pr-1' rules={[{ required: true, message: 'Không được trống' }]}>
+              <InputNumber max={130} min={0} placeholder='Lý thuyết' onInput={changeLyThuyet} className='w-100' />
+            </Form.Item>
+            <Form.Item name='practice' required className='w-100 pl-1' rules={[{ required: true, message: 'Không được trống' }]}>
+              <InputNumber max={250} min={0} placeholder='Thực hành' onInput={changeThucHanh} className='w-100' />
+            </Form.Item>
+          </div>
+        </Form.Item>
+        <Form.Item
+          required
+          rules={[{ required: true, message: 'Hãy chọn một khối kiến thức' }]}
           name='coursesType'
           label='Khối kiến thức'>
           <Select placeholder='Lựa chọn khối kiến thức' showSearch
@@ -108,26 +123,14 @@ export default function CoursesCreate({ show, setShow, classIndex, setShowType, 
                   icon={<AppstoreAddOutlined />}>Quản lý khối kiến thức mới</Button>
             </div>
           </>}>
-            {coursesType.map((e,i)=>
-              <Select.Option key={i}>
+            {coursesType.map((e)=>
+              <Select.Option key={e.id} >
                 <Tooltip title={e.name}>
                   <div style={{borderLeft:'5px solid '+ e.color, paddingLeft:'5px'}}>{e.name}</div>
                 </Tooltip>
               </Select.Option>
             )}
           </Select>
-        </Form.Item>
-        <Form.Item
-          required
-          label='Số tiết' >
-          <div className='d-flex'>
-            <Form.Item name='theory' required className='w-100 pr-1' rules={[{required: true, message: 'Không được trống'}]}>
-              <InputNumber  max={130} min={0} placeholder='Lý thuyết' onInput={changeLyThuyet} className='w-100'/>
-            </Form.Item>
-            <Form.Item name='practice' required className='w-100 pl-1' rules={[{required: true, message: 'Không được trống'}]}>
-              <InputNumber max={250} min={0} placeholder='Thực hành' onInput={changeThucHanh} className='w-100'/>          
-            </Form.Item>
-          </div>
         </Form.Item>
         <Form.Item
           label='Nâng cao' >

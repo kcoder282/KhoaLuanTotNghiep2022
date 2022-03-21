@@ -52,7 +52,7 @@ class CoursesTypeController extends Controller
      */
     public function show(CoursesType $coursesType)
     {
-        //
+        
     }
 
     /**
@@ -64,7 +64,7 @@ class CoursesTypeController extends Controller
      */
     public function update(Request $request, CoursesType $coursesType)
     {
-        //
+        
     }
 
     /**
