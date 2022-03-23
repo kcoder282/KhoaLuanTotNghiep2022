@@ -14,7 +14,9 @@ class CoursesController extends Controller
      */
     public function index(Request $request)
     {
-        return Courses::where('ClassIndexId',$request->ClassIndexId)->where('delete', 0)->get();
+        return isset($request->delete)?
+        Courses::where('ClassIndexId',$request->ClassIndexId)->where('delete', 1)->get():
+        Courses::where('ClassIndexId',$request->ClassIndexId)->where('delete', 0)->get();
     }
 
     /**
@@ -56,9 +58,10 @@ class CoursesController extends Controller
      * @param  \App\Models\Courses  $courses
      * @return \Illuminate\Http\Response
      */
-    public function show(Courses $courses)
+    public function show(Request $request)
     {
-        //
+        return Courses::where('ClassIndexId', $request->ClassIndexId)->
+        where('delete', 0)->where('sem', $request->sem)->get();
     }
 
     /**
@@ -83,11 +86,18 @@ class CoursesController extends Controller
      * @param  \App\Models\Courses  $courses
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        $courses = Courses::find($id);
-        $courses->delete = !$courses->delete;
-        return $courses->save() ?
-        ['type' => 'success'] : ['type' => 'error'];
+        if(isset($request->delete)){
+            $courses = Courses::find($id);
+            return $courses->delete() ?
+            ['type' => 'success'] : ['type' => 'error'];
+        }else{
+            $courses = Courses::find($id);
+            $courses->delete = !$courses->delete;
+            $courses->sem = null;
+            return $courses->save() ?
+            ['type' => 'success'] : ['type' => 'error'];
+        }
     }
 }
