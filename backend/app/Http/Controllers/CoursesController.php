@@ -14,9 +14,11 @@ class CoursesController extends Controller
      */
     public function index(Request $request)
     {
-        return isset($request->delete)?
-        Courses::where('ClassIndexId',$request->ClassIndexId)->where('delete', 1)->get():
-        Courses::where('ClassIndexId',$request->ClassIndexId)->where('delete', 0)->get();
+        return isset($request->all)?
+        Courses::where('ClassIndexId',$request->ClassIndexId)->where('delete', 0)->get()
+        :(isset($request->delete)?
+        Courses::where('ClassIndexId',$request->ClassIndexId)->where('sem', null)->where('delete', 1)->get():
+        Courses::where('ClassIndexId',$request->ClassIndexId)->where('sem', null)->where('delete', 0)->get());
     }
 
     /**
@@ -39,7 +41,7 @@ class CoursesController extends Controller
             $obj->practice = $request->practice;
             $obj->coursesType = $request->coursesType;
             $obj->ClassIndexId = $request->ClassIndexId;
-
+            $obj->store = $request->store??true;
             $obj->prerequisite = $request->prerequisite;
             $obj->learnFirst = $request->learnFirst;
             $obj->parallel = $request->parallel;
@@ -61,7 +63,7 @@ class CoursesController extends Controller
     public function show(Request $request)
     {
         return Courses::where('ClassIndexId', $request->ClassIndexId)->
-        where('delete', 0)->where('sem', $request->sem)->get();
+        where('delete', 0)->where('sem', $request->sem)->get();                            
     }
 
     /**

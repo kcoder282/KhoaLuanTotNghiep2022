@@ -10,17 +10,23 @@ export default function CoursesCreate({ show, setShow, classIndex, setShowType, 
   const [formAdd] = Form.useForm();
   const [coursesType, setCoursesType] = useState([]);
   const [load, setLoad] = useState(false);
+  const [courses, setCourses] = useState([]);
   useEffect(() => {
     form.setFieldsValue({'ClassIndexId': classIndex.id})
-    if(showType===false){
+    if (showType === false && classIndex){
       axios.get(host('courses_type', { 'classIndexId': classIndex.id }))
         .then((result) => {
           setCoursesType(format(result.data));
         }).catch((err) => {
           message.error('Server error')
         });
+      axios.get(host('course', { ClassIndexId: classIndex.id, all: true}))
+        .then((result) => {
+          setCourses(format(result.data))
+          console.log(result.data);
+        });
     }
-  }, [classIndex.id, form, showType])
+  }, [classIndex, classIndex.id, form, showType])
   
   const changeTinChi = (e) =>{
     form.setFieldsValue({theory: e*15, practice: 0})
@@ -105,6 +111,7 @@ export default function CoursesCreate({ show, setShow, classIndex, setShowType, 
             </Form.Item>
           </div>
         </Form.Item>
+       
         <Form.Item
           required
           rules={[{ required: true, message: 'Hãy chọn một khối kiến thức' }]}
@@ -132,10 +139,16 @@ export default function CoursesCreate({ show, setShow, classIndex, setShowType, 
             )}
           </Select>
         </Form.Item>
+        <Form.Item required
+          name='store'
+          label='Tích lũy'>
+          <Switch defaultChecked={true}/>
+        </Form.Item>
         <Form.Item
           label='Nâng cao' >
           <Switch onChange={(e)=>setTuchon(e)} defaultChecked={tuchon}/>
         </Form.Item>
+
         {tuchon?
         <> 
         <Form.Item
