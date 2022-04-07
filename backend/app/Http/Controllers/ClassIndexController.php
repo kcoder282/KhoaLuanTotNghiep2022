@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ClassIndex;
+use App\Models\Courses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -35,7 +36,7 @@ class ClassIndexController extends Controller
         $classIndex->beginYear = Carbon::parse($request->year[0])->year;
         $classIndex->endYear = Carbon::parse($request->year[1])->year;
         $classIndex->des = $request->des;
-        $classIndex->srcClassIndex = $request->srcClassIndex;
+        $classIndex->ClassIndexId = $request->ClassIndexId;
 
         return $classIndex->save() ? 
             ['type' => 'success', 'message' => isset($request->id) ? 'Cập nhật CTĐT thành công' : 'Tạo mới CTĐT thành công'] :
@@ -90,5 +91,10 @@ class ClassIndexController extends Controller
             'type' => 'error',
             'message' => 'Xóa CTĐT thất bại!'
         ];
+    }
+    public function inforCourse($id)
+    {
+        $sum = Courses::where('ClassIndexId',$id)->count();
+        return ['sum'=>$sum];
     }
 }

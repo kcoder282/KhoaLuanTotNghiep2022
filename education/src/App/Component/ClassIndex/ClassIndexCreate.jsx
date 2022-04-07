@@ -1,5 +1,5 @@
 import { PlusCircleOutlined } from '@ant-design/icons';
-import { Button, DatePicker, Input, message, Modal, Select } from 'antd'
+import { Button, DatePicker, Input, InputNumber, message, Modal, Select } from 'antd'
 import { Form } from 'antd'
 import TextArea from 'antd/lib/input/TextArea';
 import axios from 'axios';
@@ -17,6 +17,7 @@ export default function ClassIndexCreate({ show, setShow, data, list=[] }) {
             const type = result.data.type;
             message[type](result.data.message);
             setShow(false);
+            form.resetFields();
         }).catch((err) => {
             message.error('Server Error')
         }).finally(()=>setLoad(false));
@@ -58,10 +59,16 @@ export default function ClassIndexCreate({ show, setShow, data, list=[] }) {
                     }]}>
                     <DatePicker.RangePicker picker='year' style={{width:'100%'}}/>
                 </Form.Item>
+                <Form.Item required
+                    rules={[{ required: true, message: 'Yêu cầu nhập số lượng lớp dự kiến' }]}
+                    label='SL Lớp'
+                    name='classNumber'>
+                    <InputNumber defaultValue={1} />
+                </Form.Item>
                 <Form.Item
                     label='Kế tiếp CTĐT'
-                    name='srcClassIndex'>
-                    <Select 
+                    name='ClassIndexId'>
+                    <Select allowClear
                     showSearch
                     placeholder="Chọn CTĐT">
                     {list.map((e)=>

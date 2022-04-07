@@ -30,8 +30,10 @@ class CoursesTypeController extends Controller
      */
     public function store(Request $request)
     {
-        if(isset($request->id)) $obj = CoursesType::find($request->id);
+        if(isset($request->id)) 
+        $obj = CoursesType::find($request->id);
         else $obj = new CoursesType();
+
         if($obj){
         $obj->name = $request->name;
         $obj->color = $request->color;
@@ -41,7 +43,7 @@ class CoursesTypeController extends Controller
         return $obj->save()? 
         ['type'=>'success', 'message'=>isset($request->id)? 'Cập nhật thành công':'Tạo thành công khối kiến thức mới']:
         ['type'=>'error', 'message'=> isset($request->id) ? 'Cập nhật thất bại' : 'Tạo thất bại khối kiến thức mới'];}else
-        return ['type' => 'error', 'message' => 'Thất bại do ko tìm thấy khối kiến thức'];
+        return ['type' => 'error', 'message' => 'Thất bại do không tìm thấy khối kiến thức'];
     }
 
     /**

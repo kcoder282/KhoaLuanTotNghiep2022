@@ -15,9 +15,9 @@ class CreateGroupCoursesTable extends Migration
     {
         Schema::create('group_courses', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
             $table->tinyInteger('sumCredit');
-            $table->string('des',200);
+            $table->boolean('store');
+            $table->foreignId('ClassIndexId')->nullable()->constrained('class_indices');
             $table->timestamps();
         });
     }

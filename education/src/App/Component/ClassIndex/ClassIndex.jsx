@@ -82,7 +82,9 @@ export default function ClassIndex() {
                     }/>
                     <Column title='PCGD' align='center' render={(data) =>
                         <Tooltip title='Phân công giảng dạy'>
-                            <Button type='primary' shape='circle' icon={<SolutionOutlined />} />
+                            <Link to={`/PCGD/${data.name}/${data.id}`}>
+                                <Button type='primary' shape='circle' icon={<SolutionOutlined />} />
+                            </Link>
                         </Tooltip>
                     }/>
                 </Table>

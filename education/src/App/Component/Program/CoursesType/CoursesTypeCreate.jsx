@@ -1,14 +1,13 @@
 import { Button, Form, Input, Modal, Select, Table, Tooltip, message, Switch } from 'antd'
 import React, { useEffect, useState } from 'react'
 import TextArea from 'antd/lib/input/TextArea';
-import { colorList, format } from '../../../App';
+import { format } from '../../../App';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import Column from 'antd/lib/table/Column';
 import axios from 'axios';
 import { host } from '../../../App'
 
 export default function CoursesTypeCreate({ show, setShow, classIndex }) {
-    const color = colorList;
     const [dataList, setDataList] = useState();
     const [newData, setNewData] = useState(true);
     const [viewList, setViewList] = useState(false);
@@ -117,14 +116,7 @@ export default function CoursesTypeCreate({ show, setShow, classIndex }) {
                     rules={[{ required: true, message: 'Màu không được rỗng' }]}
                     name='color'
                     required>
-                    <Select placeholder='Chọn màu chủ đạo' showSearch filterOption={(input, option) => 
-                        (option.children[2]+'').toLowerCase().includes(input.toLowerCase())
-                    }>
-                        {color.map((e,i)=>
-                        <Select.Option key={i} value={e.code}>
-                                <span style={{ color: e.code }}>■</span> {e.name}
-                        </Select.Option>)}
-                    </Select>
+                    <Input type='color'/>
                 </Form.Item>
                 <Form.Item
                     label='Mô tả'

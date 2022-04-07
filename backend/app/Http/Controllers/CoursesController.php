@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Courses;
+use App\Models\GroupCourse;
 use Illuminate\Http\Request;
 
 class CoursesController extends Controller
@@ -14,11 +15,14 @@ class CoursesController extends Controller
      */
     public function index(Request $request)
     {
-        return isset($request->all)?
-        Courses::where('ClassIndexId',$request->ClassIndexId)->where('delete', 0)->get()
-        :(isset($request->delete)?
-        Courses::where('ClassIndexId',$request->ClassIndexId)->where('sem', null)->where('delete', 1)->get():
-        Courses::where('ClassIndexId',$request->ClassIndexId)->where('sem', null)->where('delete', 0)->get());
+
+        if (isset($request->all)) {
+            return Courses::where('ClassIndexId', $request->ClassIndexId)->where('delete', 0)->get();
+        } else if (isset($request->delete)) {
+            return Courses::where('ClassIndexId', $request->ClassIndexId)->where('sem', null)->where('delete', 1)->get();
+        } else {
+            return Courses::where('ClassIndexId', $request->ClassIndexId)->where('sem', null)->where('delete', 0)->orderBy('groupCourseId')->get();
+        }
     }
 
     /**
@@ -29,29 +33,30 @@ class CoursesController extends Controller
      */
     public function store(Request $request)
     {
-        if(Courses::where('code', $request->code)->first()) 
-        return ['type' => 'error', 'message' => 'Mã Môn học bị trùng'];
-        if(isset($request->id)) $obj = Courses::find($request->id);
+        if (Courses::where('code', $request->code)->first() && !isset($request->id))
+            return ['type' => 'error', 'message' => 'Mã Môn học bị trùng'];
+        if (isset($request->id)) $obj = Courses::find($request->id);
         else $obj = new Courses();
-        if($obj){
+        if ($obj) {
             $obj->code = $request->code;
             $obj->name = $request->name;
             $obj->credits = $request->credits;
-            $obj->theory = $request->theory;
-            $obj->practice = $request->practice;
+
+            $obj->theory = $request->check_theory_practice === true ? $request->theory : 0;
+            $obj->practice = $request->check_theory_practice === true ? $request->practice : 0;
             $obj->coursesType = $request->coursesType;
             $obj->ClassIndexId = $request->ClassIndexId;
-            $obj->store = $request->store??true;
+            $obj->store = $request->store ?? true;
             $obj->prerequisite = $request->prerequisite;
             $obj->learnFirst = $request->learnFirst;
             $obj->parallel = $request->parallel;
 
             $obj->groupCourseId = $request->groupCourseId;
-            return $obj->save()?
-            ['type'=>'success', 'message'=> isset($request->id)?'Cập nhật khóa học thành công':'Thêm khóa học thành công']:
-            ['type'=>'error','message'=> isset($request->id) ? 'Cập nhật khóa học thất bại' : 'Thêm khóa học thất bại'];
-        }else
-        return ['type'=>'error','message'=>'Không tìm thấy khóa học muốn cập nhật'];
+            return $obj->save() ?
+                ['type' => 'success', 'message' => isset($request->id) ? 'Cập nhật khóa học thành công' : 'Thêm khóa học thành công'] :
+                ['type' => 'error', 'message' => isset($request->id) ? 'Cập nhật khóa học thất bại' : 'Thêm khóa học thất bại'];
+        } else
+            return ['type' => 'error', 'message' => 'Không tìm thấy khóa học muốn cập nhật'];
     }
 
     /**
@@ -62,8 +67,7 @@ class CoursesController extends Controller
      */
     public function show(Request $request)
     {
-        return Courses::where('ClassIndexId', $request->ClassIndexId)->
-        where('delete', 0)->where('sem', $request->sem)->get();                            
+        return Courses::where('ClassIndexId', $request->ClassIndexId)->where('delete', 0)->where('sem', $request->sem)->orderBy('groupCourseId')->get();
     }
 
     /**
@@ -77,9 +81,29 @@ class CoursesController extends Controller
     {
         $courses = Courses::find($id);
         $courses->sem = $request->sem;
-        return $courses->save()?
-        ['type' => 'success', 'message' => 'Thành công'] :
-        ['type' => 'error', 'message' => 'Thất bại'];
+        if ($courses->groupCourseId !== null) {
+            $courses->groupCourseId = null;
+            $courses->save();
+
+            $group = GroupCourse::all();
+            foreach ($group as $item) {
+                $count = Courses::where('groupCourseId', $item->id)->count();
+                if ($count === 0) {
+                    $item->delete();
+                } else if ($count === 1) {
+                    $co = Courses::where('groupCourseId', $item->id)->first();
+                    $co->sem = null;
+                    $co->save();
+                    $item->delete();
+                }
+            }
+
+            return ['type' => 'success', 'message' => 'Thành công'];
+        }
+
+        return $courses->save() ?
+            ['type' => 'success', 'message' => 'Thành công'] :
+            ['type' => 'error', 'message' => 'Thất bại'];
     }
 
     /**
@@ -90,16 +114,17 @@ class CoursesController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        if(isset($request->delete)){
+        if (isset($request->delete)) {
             $courses = Courses::find($id);
             return $courses->delete() ?
-            ['type' => 'success'] : ['type' => 'error'];
-        }else{
+                ['type' => 'success'] : ['type' => 'error'];
+        } else {
             $courses = Courses::find($id);
             $courses->delete = !$courses->delete;
             $courses->sem = null;
             return $courses->save() ?
-            ['type' => 'success'] : ['type' => 'error'];
+                ['type' => 'success'] : ['type' => 'error'];
         }
     }
+   
 }

@@ -18,12 +18,12 @@ export default function ProgramSetting({ show, setShow, data, tab }) {
             const type = result.data.type;
             message[type](result.data.message);
             setShow(false);
-        }).catch((err) => {
+        }).catch(() => {
             message.error('Server Error');
         })
     }
     return (
-        <Modal title={"Cài đặt khóa học "+data.name} footer={false} visible={show} onCancel={()=>setShow(false)}>
+        <Modal title={'Cài đặt khóa học ' + data.name} footer={false} visible={show} onCancel={()=>setShow(false)}>
             <Form form={form}
                 onFinish={action}
                 labelCol={{ span: 5 }}
@@ -35,12 +35,6 @@ export default function ProgramSetting({ show, setShow, data, tab }) {
                     name='sem'
                     label='Số năm học'>
                     <InputNumber min={3} max={8}/>
-                </Form.Item>
-                <Form.Item 
-                    valuePropName="checked"
-                    name='semThree'
-                    label='Học Kỳ hè'>
-                    <Switch/>
                 </Form.Item>
                 <div className='text-right'>
                     <Button htmlType='submit' icon={<SaveOutlined/>} shape='round' type='primary'>Lưu thay đổi</Button>
