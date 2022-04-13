@@ -14,7 +14,7 @@ class LecturersController extends Controller
      */
     public function index()
     {
-        //
+        return lecturers::all();
     }
 
     /**
@@ -25,7 +25,20 @@ class LecturersController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if (isset($request->id)) {
+            $lecturers = lecturers::find($request->id);
+            if ($lecturers == null) $lecturers = new lecturers();
+        } else
+            $lecturers = new lecturers();
+
+        $lecturers->code = $request->code;
+        $lecturers->name = $request->name;
+        $lecturers->birth = $lecturers->birth;
+        $lecturers->phone = $lecturers->phone;
+        $lecturers->mail = $lecturers->mail;
+        $lecturers->isIT = $lecturers->isIT === false ? 0 : 1;
+        return $lecturers->save() ?
+            ['type' => 'success'] : ['type' => 'error'];
     }
 
     /**
@@ -57,8 +70,9 @@ class LecturersController extends Controller
      * @param  \App\Models\lecturers  $lecturers
      * @return \Illuminate\Http\Response
      */
-    public function destroy(lecturers $lecturers)
+    public function destroy($id)
     {
-        //
+        return lecturers::find($id)->delete() ?
+            ['type' => 'success'] : ['type' => 'error'];
     }
 }

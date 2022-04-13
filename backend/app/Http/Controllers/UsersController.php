@@ -2,63 +2,48 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Users;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function login(Request $request)
     {
-        //
+        $user = User::where('username', $request->username)
+        ->where('password', md5($request->password))->first();
+        if($user){
+            $user->token = md5(uniqid($user->username, true));
+            $user->save();
+            return $user;
+        }else return ['id'=>0];
+        
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+    public function user(Request $request)
+    {   
+        return $request->user;
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Users  $users
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Users $users)
-    {
-        //
+    public function addUser(Request $request){
+        $user = new User();
+        $user->username = $request->username;
+        $user->password = md5($request->password);
+        $user->mail = $request->mail;
+        $user->token = '';
+        return $user->save()?['type'=>'success']:['type'=>'error'];
     }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Users  $users
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Users $users)
+    public function delUser(Request $request)
     {
-        //
+        
     }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Users  $users
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Users $users)
+    public function changeUser(Request $request)
     {
-        //
+        $user = User::find($request->id);
+        $user->password = md5($request->password);
+        return $user->save()?['type'=>'success']:['type'=>'error'];
+    }
+    public function listUser(Request $request)
+    {
+        return User::all();
     }
 }

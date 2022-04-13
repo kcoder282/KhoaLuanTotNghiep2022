@@ -7,7 +7,7 @@ import {
     ArrowLeftOutlined, ArrowRightOutlined, PlusOutlined,
     ReadOutlined, SettingOutlined, EditOutlined, DeleteOutlined,
     AppstoreOutlined, FileSyncOutlined, OrderedListOutlined, 
-    UnorderedListOutlined, FileExcelOutlined, InfoCircleOutlined, SolutionOutlined
+    UnorderedListOutlined, FileExcelOutlined, InfoCircleOutlined, SolutionOutlined, HomeOutlined
 }
     from '@ant-design/icons';
 import ProgramSetting from './ProgramSetting';
@@ -87,12 +87,7 @@ export default function Program() {
                 .then((result) => {
                     setGroupList(result.data)
                 })
-        return () => {
-            setDataClassIndex([]);
-            setGroupList([]);
-            setListCourses([]);
-            setCoursesList([]);
-        }
+        
     }, [id, showSetting, showCourse, groupCourse, tab?.key, showExcel])
 
     const ChangeSem = (data, i, check) => {
@@ -154,13 +149,16 @@ export default function Program() {
         <div className='h-100 d-flex flex-column'>
             <h4 className='text-uppercase text-primary'>Thiết Kế CTĐT: {name}</h4>
             <Space size='small' className='my-2'>
+                <Link to='/'>
+                    <Button type='primary' shape='circle' icon={<HomeOutlined />}></Button>
+                </Link>
                 <Button type='primary' shape='round' icon={<FileExcelOutlined />} onClick={() => setShowExcel(true)}>Nhập từ Excel</Button>
-                <Button type='primary' shape='round' icon={<FileExcelOutlined />} onClick={() => setShowExcel(true)}>Xuất file Excel</Button>
+                {/* <Button type='primary' shape='round' icon={<FileExcelOutlined />} onClick={() => setShowExcel(true)}>Xuất file Excel</Button> */}
                 <Link to={`/PCGD/${name}/${id}`}>
                     <Button type='primary' shape='round' icon={<SolutionOutlined />}>Phân công giảng dạy</Button>
                 </Link>
                 <Button type='primary' shape='round' icon={<SettingOutlined />} onClick={() => setShowSetting(true)}>Cài đặt</Button>
-                <Button type='primary' shape='round' icon={<InfoCircleOutlined />}>Thông tin</Button>
+                {/* <Button type='primary' shape='round' icon={<InfoCircleOutlined />}>Thông tin</Button> */}
                 <Button type={showListCourse ? 'primary' : 'default'} onClick={() => setShowListCourse(!showListCourse)}
                     shape='round' icon={<OrderedListOutlined />}>Danh sách môn</Button>
             </Space>

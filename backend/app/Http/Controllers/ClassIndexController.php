@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ClassIndex;
+use App\Models\className;
 use App\Models\Courses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -37,10 +38,24 @@ class ClassIndexController extends Controller
         $classIndex->endYear = Carbon::parse($request->year[1])->year;
         $classIndex->des = $request->des;
         $classIndex->ClassIndexId = $request->ClassIndexId;
+        if ($classIndex->save()){
+            if ($request->classNumber > 1)
+                for ($i = 0; $i < $request->classNumber; $i++) {
+                    $class = new className();
+                    $class->ClassIndexId = $classIndex->id;
+                    $class->name = $request->name . ($i + 1);
+                    $class->save();
+                }
+            else {
+                $class = new className();
+                $class->ClassIndexId = $classIndex->id;
+                $class->name = $request->name;
+                $class->save();
+            }
+            return ['type'=>'success'];
+        }else return ['type'=>'error'];
+            
 
-        return $classIndex->save() ? 
-            ['type' => 'success', 'message' => isset($request->id) ? 'Cập nhật CTĐT thành công' : 'Tạo mới CTĐT thành công'] :
-            ['type' => 'error', 'message' => 'Xảy ra lỗi khi thêm CTĐT mới'];
     }
 
     /**
@@ -63,16 +78,16 @@ class ClassIndexController extends Controller
      */
     public function update(Request $request, ClassIndex $classIndex)
     {
-        if(isset($request->del)){
+        if (isset($request->del)) {
             $classIndex->del = $request->del;
             return $classIndex->save() ? ['type' => 'success', 'message' => 'Chuyển file vào thùng rác thành công'] :
-            ['type' => 'error', 'message' => 'Chuyển file vào thùng rác thất bại'];
-        }else{
+                ['type' => 'error', 'message' => 'Chuyển file vào thùng rác thất bại'];
+        } else {
             $classIndex->sem = $request->sem;
             $classIndex->semThree = $request->semThree;
-            return $classIndex->save()?
-            ['type' => 'success', 'message' => 'Cập nhật thông tin thành công']:
-            ['type' => 'error', 'message' => 'Cập nhật thông tin thất bại'];
+            return $classIndex->save() ?
+                ['type' => 'success', 'message' => 'Cập nhật thông tin thành công'] :
+                ['type' => 'error', 'message' => 'Cập nhật thông tin thất bại'];
         }
     }
 
@@ -84,17 +99,17 @@ class ClassIndexController extends Controller
      */
     public function destroy(ClassIndex $classIndex)
     {
-        return $classIndex->delete()?[
+        return $classIndex->delete() ? [
             'type' => 'success',
-            'message' => 'Xóa CTĐT thành công' 
-        ]:[
+            'message' => 'Xóa CTĐT thành công'
+        ] : [
             'type' => 'error',
             'message' => 'Xóa CTĐT thất bại!'
         ];
     }
     public function inforCourse($id)
     {
-        $sum = Courses::where('ClassIndexId',$id)->count();
-        return ['sum'=>$sum];
+        $sum = Courses::where('ClassIndexId', $id)->count();
+        return ['sum' => $sum];
     }
 }

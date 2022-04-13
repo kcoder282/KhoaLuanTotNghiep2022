@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Courses;
 use App\Models\infoAssignment;
 use Illuminate\Http\Request;
 
@@ -12,9 +13,29 @@ class InfoAssignmentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $assignment = Courses::where('ClassIndexId', $request->ClassIndexId)
+            ->where('sem', $request->sem)->orWhere('semReal', $request->sem)->get();
+        foreach ($assignment as $key => $item) {
+            $info = infoAssignment::where('courseId', $item->id)
+                ->where('classNameId', $request->classNameId)->first();
+            if ($info === null) {
+                $info = new infoAssignment();
+                $info->courseId = $item->id;
+                $info->classNameId = $request->classNameId;
+                $info->save();
+            }
+            $assignment[$key]->id_info = $info->id;
+            $assignment[$key]->leactuerId = $info->leactuerId;
+            $assignment[$key]->assignment = $info->assignment;
+            $assignment[$key]->request = $info->request;
+            $assignment[$key]->note = $info->note;
+            $assignment[$key]->classSize = $info->classSize;
+            $assignment[$key]->theory_info = $info->theory;
+            $assignment[$key]->practice_info = $info->practice;
+        }
+        return $assignment;
     }
 
     /**
@@ -23,9 +44,20 @@ class InfoAssignmentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $r)
     {
-        //
+        $info = infoAssignment::find($r->id_info);
+        if ($info) {
+            $info->leactuerId = $r->leactuerId;
+            $info->assignment = $r->assignment;
+            // $info->re = $r->re;
+            $info->note = $r->note;
+            $info->classSize = $r->classSize;
+            $info->theory = $r->theory_info;
+            $info->practice = $r->practice_info;
+            return $info->save() ?
+                ['type' => 'success'] : ['type' => 'error'];
+        } else return ['type' => 'error'];
     }
 
     /**

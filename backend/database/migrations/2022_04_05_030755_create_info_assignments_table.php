@@ -15,11 +15,11 @@ class CreateInfoAssignmentsTable extends Migration
     {
         Schema::create('info_assignments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('courseId')->constrained('courses');
-            $table->foreignId('classNameId')->constrained('class_names');
-            $table->foreignId('leactuerId')->constrained('lecturers');
+            $table->foreignId('courseId')->constrained('courses')->cascadeOnDelete();
+            $table->foreignId('classNameId')->constrained('class_names')->cascadeOnDelete();
+            $table->foreignId('leactuerId')->nullable()->constrained('lecturers');
             $table->string('assignment')->nullable();
-            $table->string('request')->nullable();
+            $table->string('re')->nullable();
             $table->string('note')->nullable();
             $table->integer('classSize')->nullable();
             $table->tinyInteger('theory')->nullable();

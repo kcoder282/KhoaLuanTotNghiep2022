@@ -63,9 +63,9 @@ export default function ClassIndexCreate({ show, setShow, data, list=[] }) {
                     rules={[{ required: true, message: 'Yêu cầu nhập số lượng lớp dự kiến' }]}
                     label='SL Lớp'
                     name='classNumber'>
-                    <InputNumber defaultValue={1} />
+                    <InputNumber defaultValue={1} min={1} max={120}/>
                 </Form.Item>
-                <Form.Item
+                {/* <Form.Item
                     label='Kế tiếp CTĐT'
                     name='ClassIndexId'>
                     <Select allowClear
@@ -75,7 +75,7 @@ export default function ClassIndexCreate({ show, setShow, data, list=[] }) {
                         <Select.Option key={e.key} value={e.id}>{e.name}({e.beginYear} - {e.endYear})</Select.Option>
                     )}
                     </Select>
-                </Form.Item>
+                </Form.Item> */}
                 <Form.Item
                     label='Mô tả'
                     name='des'>
